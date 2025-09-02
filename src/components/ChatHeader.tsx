@@ -1,13 +1,15 @@
 import React from 'react';
-import { ArrowLeft, Phone, Video, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Phone, Video, MoreVertical, RotateCcw } from 'lucide-react';
 
 interface ChatHeaderProps {
   contactName: string;
   status: string;
   isOnline: boolean;
+  onReset?: () => void;
+  showReset?: boolean;
 }
 
-export default function ChatHeader({ contactName, status, isOnline }: ChatHeaderProps) {
+export default function ChatHeader({ contactName, status, isOnline, onReset, showReset = false }: ChatHeaderProps) {
   return (
     <div className="bg-[#128C7E] text-white px-4 py-3 flex items-center justify-between">
       <div className="flex items-center space-x-3">
@@ -29,6 +31,15 @@ export default function ChatHeader({ contactName, status, isOnline }: ChatHeader
         </div>
       </div>
       <div className="flex items-center space-x-2">
+        {showReset && onReset && (
+          <button 
+            onClick={onReset}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            title="Reset Chat"
+          >
+            <RotateCcw size={20} />
+          </button>
+        )}
         <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
           <Video size={20} />
         </button>

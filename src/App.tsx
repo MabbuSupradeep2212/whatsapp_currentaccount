@@ -5,8 +5,14 @@ import ChatInput from './components/ChatInput';
 import useChat from './hooks/useChat';
 
 function App() {
-  const { messages, isTyping, sendMessage } = useChat();
+  const { messages, isTyping, chatStarted, sendMessage, sendMessageWithFiles, startChat, resetChat } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const handleReset = () => {
+    if (window.confirm('Are you sure you want to reset the chat? This will clear all messages and start over.')) {
+      resetChat();
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -44,17 +50,44 @@ function App() {
         {/* Chat Interface */}
         <div className="h-[600px] flex flex-col">
           <ChatHeader 
-            contactName="AI Assistant"
-            status="last seen today at 10:30"
+            contactName="Business Loan Assistant"
+            status="Ready to help with your loan application"
             isOnline={true}
+            onReset={handleReset}
+            showReset={chatStarted}
           />
           
           <div className="flex-1 flex flex-col min-h-0">
-            <ChatMessages messages={messages} isTyping={isTyping} />
-            <div ref={messagesEndRef} />
+            {!chatStarted ? (
+              // Welcome screen with Start Chat button
+              <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#E5DDD5] bg-opacity-20">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-[#25D366] rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">Business Loan Assistant</h2>
+                  <p className="text-gray-600 mb-6">Welcome! I'll help you apply for a business loan.<br />Click below to start your application.</p>
+                  <button
+                    onClick={startChat}
+                    className="bg-[#25D366] text-white px-8 py-3 rounded-full font-medium hover:bg-[#20C157] transition-colors shadow-lg"
+                  >
+                    Start Chat
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <ChatMessages messages={messages} isTyping={isTyping} />
+                <div ref={messagesEndRef} />
+              </>
+            )}
           </div>
           
-          <ChatInput onSendMessage={sendMessage} />
+          {chatStarted && (
+            <ChatInput onSendMessage={sendMessage} onSendMessageWithFiles={sendMessageWithFiles} />
+          )}
         </div>
       </div>
     </div>

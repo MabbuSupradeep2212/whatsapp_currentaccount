@@ -9,6 +9,10 @@ interface MessageData {
   isOwn: boolean;
   isRead?: boolean;
   isDelivered?: boolean;
+  hasAttachment?: boolean;
+  attachmentType?: 'bank_statement' | 'itr_document';
+  attachmentName?: string;
+  isError?: boolean;
 }
 
 interface ChatMessagesProps {
@@ -28,6 +32,10 @@ export default function ChatMessages({ messages, isTyping }: ChatMessagesProps) 
             isOwn={message.isOwn}
             isRead={message.isRead}
             isDelivered={message.isDelivered}
+            hasAttachment={message.hasAttachment}
+            attachmentType={message.attachmentType}
+            attachmentName={message.attachmentName}
+            isError={message.isError}
           />
         ))}
         {isTyping && <TypingIndicator />}
